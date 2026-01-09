@@ -4,15 +4,13 @@ trigger:
 name: Deploy Bicep files
 
 variables:
-  poolName: AzureVm
-  poolDemands: Agent.Name -equals vm-pipeline-linux
   azureServiceConnection: "claud-subs"
   resourceGroupName: "rg-bicep"
   location: "westeurope"
   templateFile: "./bicep/main.bicep"
 pool:
-  name: $(poolName)
-  demands: $(poolDemands)
+    name: AzureVm
+    demands: Agent.Name -equals vm-pipeline-linux
 
 steps:
   - task: AzureCLI@2
