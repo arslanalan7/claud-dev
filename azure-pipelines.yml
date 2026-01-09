@@ -1,0 +1,24 @@
+trigger:
+  - main
+
+name: Deploy Bicep files
+
+variables:
+  azureServiceConnection: "claud-subs"
+  resourceGroupName: "rg-bicep"
+  location: "westeurope"
+  templateFile: "./bicep/main.bicep"
+pool:
+    name: AzureVm
+    demands: Agent.Name -equals vm-pipeline-linux
+
+steps:
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: $(azureServiceConnection)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az --version
+        az group create --name $(resourceGroupName) --location $(location)
+        az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile)
